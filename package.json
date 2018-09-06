@@ -1,0 +1,29 @@
+{
+  "name": "projectsdashboard",
+  "version": "1.0.0",
+  "description": "View your projects in dashboard with file and stats",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpitechUtils/ProjectsDashboard.git"
+  },
+  "author": "mrlizzard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EpitechUtils/ProjectsDashboard/issues"
+  },
+  "homepage": "https://github.com/EpitechUtils/ProjectsDashboard#readme",
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-contrib-jshint": "^1.1.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.2",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "moment": "^2.22.2"
+  }
+}
