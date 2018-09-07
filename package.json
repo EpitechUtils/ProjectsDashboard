@@ -2,7 +2,7 @@
   "name": "projectsdashboard",
   "version": "1.0.0",
   "description": "View your projects in dashboard with file and stats",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,11 +17,15 @@
   },
   "homepage": "https://github.com/EpitechUtils/ProjectsDashboard#readme",
   "devDependencies": {
+    "eslint-config-defaults": "^9.0.0",
     "grunt": "^1.0.3",
     "grunt-contrib-jshint": "^1.1.0"
   },
   "dependencies": {
+    "async": "^2.6.1",
+    "axios": "^0.18.0",
     "bluebird": "^3.5.2",
+    "eslint": "^5.5.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "moment": "^2.22.2"
