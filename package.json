@@ -1,34 +1,37 @@
 {
   "name": "projectsdashboard",
   "version": "1.0.0",
-  "description": "View your projects in dashboard with file and stats",
-  "main": "app.js",
+  "description": "See your blih projects with their files and see stats about the projects and more",
+  "main": "app",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "start": "npm run build && node dist/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EpitechUtils/ProjectsDashboard.git"
   },
-  "author": "mrlizzard",
+  "keywords": [
+    "epitech",
+    "projects",
+    "dahsboard",
+    "blih"
+  ],
+  "author": "Cyril COLINET",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/EpitechUtils/ProjectsDashboard/issues"
   },
   "homepage": "https://github.com/EpitechUtils/ProjectsDashboard#readme",
-  "devDependencies": {
-    "eslint-config-defaults": "^9.0.0",
-    "grunt": "^1.0.3",
-    "grunt-contrib-jshint": "^1.1.0"
-  },
   "dependencies": {
-    "async": "^2.6.1",
-    "axios": "^0.18.0",
-    "bluebird": "^3.5.2",
     "eslint": "^5.5.0",
     "express": "^4.16.3",
-    "express-authentication": "^0.3.2",
-    "express-session": "^1.15.6",
-    "moment": "^2.22.2"
+    "morgan": "^1.9.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "rimraf": "^2.6.2"
   }
 }
