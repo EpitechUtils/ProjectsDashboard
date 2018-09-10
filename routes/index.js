@@ -1,9 +1,17 @@
-var express = require('express');
-var router = express.Router();
+/**
+ * Index route
+ * ProjectsDashboard
+ */
+let fs = require('fs');
+let express = require('express');
 
-/* GET home page. */
+let fileUtils = require('../utils/file');
+let router = express.Router();
+
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    if (!fs.existsSync(fileUtils.getBaseAppPath() + 'user.json')) {
+        return res.redirect('/login');
+    }
 });
 
 module.exports = router;
