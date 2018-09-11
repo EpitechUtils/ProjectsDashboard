@@ -7,7 +7,7 @@ let router = express.Router();
 
 router.get('/', (req, res) => res.render('login'));
 router.post('/', (req, res) => {
-    res.redirect('/login');
+    res.send(req.data);
 });
 
 module.exports = router;
