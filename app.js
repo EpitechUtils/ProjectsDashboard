@@ -18,6 +18,13 @@ let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
 
+app.locals = {
+    site: {
+        name: "DashBlih",
+        nameStylish: '<b>Dash</b>Blih'
+    }
+};
+
 app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json());
