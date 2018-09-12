@@ -3239,6 +3239,7 @@ table.text-center th {
   text-align: center;
   margin-bottom: 25px;
   font-weight: 300;
+  text-shadow: 2px 2px 8px #0006;
 }
 .login-logo a,
 .register-logo a {
@@ -3246,7 +3247,9 @@ table.text-center th {
 }
 .login-page,
 .register-page {
-  background: #d2d6de;
+  background: url(../img/geometry.png) repeat scroll top left !important;
+  border-top: #F4F4F41A inset;
+  border-bottom: #F4F4F41A outset;
 }
 .login-box,
 .register-box {
@@ -3266,6 +3269,7 @@ table.text-center th {
   padding: 20px;
   border-top: 0;
   color: #666;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .login-box-body .form-control-feedback,
 .register-box-body .form-control-feedback {
