@@ -12,6 +12,7 @@
 
 
     // Blih login form
+    // TODO: No send password in brut
     $('#blih_login').submit(function(event) {
         let fields = $(this).serializeObject();
         if (!fields.email || !fields.password) {
@@ -35,11 +36,14 @@
             type: 'POST',
             data: $(this).serializeObject(),
             success: function(res) {
-                let data = JSON.parse(res);
+                //let data = JSON.parse(res);
+                let data = res;
                 let messageElement = $('#message');
 
+                console.log(data);
+
                 // Error occured on POST method
-                if (data.error) {
+                if (data.error !== null) {
                     messageElement
                         .html(generateAlert(null, data.error, 'danger'))
                         .fadeIn('slow');
