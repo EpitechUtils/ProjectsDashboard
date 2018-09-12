@@ -15,15 +15,15 @@
     // TODO: No send password in brut
     $('#blih_login').submit(function(event) {
         let fields = $(this).serializeObject();
+        let msg = $('#message');
+
         if (!fields.email || !fields.password) {
-            $('#message')
-                .html(generateAlert(null, 'Des champs requis sont vides.', 'danger'))
+            msg.html(generateAlert(null, 'Des champs requis sont vides.', 'danger'))
                 .fadeIn('slow');
             event.preventDefault();
             return;
         } else if (!isValidEpitechEmail(fields.email)) {
-            $('#message')
-                .html(generateAlert(null, 'L\'email n\'est pas une adresse Epitech.', 'danger'))
+            msg.html(generateAlert(null, 'L\'email n\'est pas une adresse Epitech.', 'danger'))
                 .fadeIn('slow');
             event.preventDefault();
             return;
@@ -35,32 +35,25 @@
             url: '/login',
             type: 'POST',
             data: $(this).serializeObject(),
-            success: function(res) {
-                //let data = JSON.parse(res);
-                let data = res;
-                let messageElement = $('#message');
-
-                console.log(data);
-
+            success: function(data) {
                 // Error occured on POST method
-                if (data.error !== null) {
-                    messageElement
-                        .html(generateAlert(null, data.error, 'danger'))
+                if (!data.success) {
+                    msg.html(generateAlert(null, data.error, 'danger'))
                         .fadeIn('slow');
-                    event.preventDefault();
                     return;
                 }
 
-                messageElement
-                    .html(generateAlert(null, '<i class="fa fa-spinner fa-spin"></i> Redirection vers Office365...', 'success'))
+                msg.html(generateAlert(null, '<i class="fa fa-spinner fa-spin"></i> Redirection vers Office365...', 'success'))
                     .fadeIn('slow');
+                let opened = window.open(data.redirect, '', "height=750,width=1250,scrollbars=1,resizable=1,location=1");
+                setTimeout(() => opened.close(), 5000); // TODO: onHashChangeEvent
             },
-            error: function(err) {
-                $('#message')
-                    .html(generateAlert(null, 'Erreur lors de la connexion: ' + err + '.', 'danger'))
+            error: function() {
+                $('#message').html(generateAlert(null, 'Erreur lors de la connexion.', 'danger'))
                     .fadeIn('slow');
             }
         });
+
         event.preventDefault();
     });
 

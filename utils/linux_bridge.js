@@ -12,7 +12,7 @@ function checkBlihConnection(email, password) {
     command += ' -t ' + token + ' repository list';
 
     return new Promise((resolve, reject) => {
-        childProcess.exec(command, (err) => {
+        childProcess.exec(command, err => {
             if (err) {
                 return reject(new Error('Identifiants incorrects.'));
             }
