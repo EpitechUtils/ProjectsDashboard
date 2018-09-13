@@ -12,7 +12,6 @@
 
 
     // Blih login form
-    // TODO: No send password in brut
     $('#blih_login').submit(function(event) {
         let fields = $(this).serializeObject();
         let msg = $('#message');
@@ -34,6 +33,7 @@
             return;
         }
 
+        // Encrypt password
         fields.password = fields.password.toSha512();
 
         // Call ajax login call and redirect to office365 url in new page

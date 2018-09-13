@@ -60,7 +60,7 @@
 
     /**
      * Convert string to sha512 hash
-     * @returns {string|*}
+     * @returns {string}
      */
     String.prototype.toSha512 = function() {
         let self = this;
