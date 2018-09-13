@@ -14,7 +14,9 @@ router.get('/', function(req, res) {
     }
 
     console.log(file.getUserConfig());
-    return res.render('index');
+    return res.render('index', {
+        title: 'Accueil',
+    });
 });
 
 module.exports = router;
