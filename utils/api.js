@@ -11,6 +11,11 @@ let axios = require('axios').create({
     }
 });
 
+
+/**
+ * Get office365 login
+ * @returns {Promise<any>} Office link or nothing
+ */
 function getOffice365LoginURI() {
     return new Promise((resolve, reject) => {
         axios({
@@ -26,6 +31,13 @@ function getOffice365LoginURI() {
     });
 }
 
+
+/**
+ * Validate autologin link for user
+ * @param {String} autologin Autologin epitech link
+ * @param {String} email epitech login email
+ * @returns {Promise<any>} Boolean
+ */
 function validateAutologin(autologin, email) {
     return new Promise((resolve, reject) => {
         // Check if autologin link is a valid autologin
@@ -54,7 +66,28 @@ function validateAutologin(autologin, email) {
     });
 }
 
+
+function getBaseAuthInformations(autologin) {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: autologin + '/user'
+        }).then(res => {
+            let data = res.data;
+
+            resolve({
+                login: data.login,
+                firstname: data.firstname,
+                lastname: data.lastname,
+                picture: data.picture,
+                promo: data.promo
+            });
+        }).catch(err => reject(err));
+    });
+}
+
 module.exports = {
     getOffice365LoginURI: getOffice365LoginURI,
-    validateAutologin: validateAutologin
+    validateAutologin: validateAutologin,
+    getBaseAuthInformations: getBaseAuthInformations
 };
