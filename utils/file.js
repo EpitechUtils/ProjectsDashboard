@@ -14,6 +14,9 @@ function getBaseAppPath() {
 }
 
 
+// function createAuthFile(email, token, )
+
+
 module.exports = {
     getBaseAppPath: getBaseAppPath
 };

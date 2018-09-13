@@ -34,12 +34,14 @@
             return;
         }
 
+        fields.password = fields.password.toSha512();
+
         // Call ajax login call and redirect to office365 url in new page
         // for epitech login
         $.ajax({
             url: '/login',
             type: 'POST',
-            data: $(this).serializeObject(),
+            data: fields,
             success: function(data) {
                 // Error occured on POST method
                 if (!data.success) {
