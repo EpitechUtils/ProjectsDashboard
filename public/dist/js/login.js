@@ -17,13 +17,18 @@
         let fields = $(this).serializeObject();
         let msg = $('#message');
 
-        if (!fields.email || !fields.password) {
-            msg.html(generateAlert(null, 'Des champs requis sont vides.', 'danger'))
+        if (!fields.email || !fields.password || !fields.autologin) {
+            msg.html(generateAlert('Erreur rencontrée !', 'Des champs requis sont vides.', 'danger'))
                 .fadeIn('slow');
             event.preventDefault();
             return;
         } else if (!isValidEpitechEmail(fields.email)) {
-            msg.html(generateAlert(null, 'L\'email n\'est pas une adresse Epitech.', 'danger'))
+            msg.html(generateAlert('Erreur rencontrée !', 'L\'email n\'est pas une adresse Epitech.', 'danger'))
+                .fadeIn('slow');
+            event.preventDefault();
+            return;
+        } else if (!fields.autologin.startsWith('https://intra.epitech.eu/auth-')) {
+            msg.html(generateAlert('Erreur rencontrée !', 'Lien d\'autologin invalide.', 'danger'))
                 .fadeIn('slow');
             event.preventDefault();
             return;
@@ -38,18 +43,18 @@
             success: function(data) {
                 // Error occured on POST method
                 if (!data.success) {
-                    msg.html(generateAlert(null, data.error, 'danger'))
+                    msg.html(generateAlert('Erreur rencontrée !', data.error, 'danger'))
                         .fadeIn('slow');
                     return;
                 }
 
-                msg.html(generateAlert(null, '<i class="fa fa-spinner fa-spin"></i> Redirection vers Office365...', 'success'))
+                msg.html(generateAlert('Tout s\'est passé comme prévu !', '<i class="fa fa-spinner fa-spin"></i> Connexion en cours...', 'success'))
                     .fadeIn('slow');
-                let opened = window.open(data.redirect, '', "height=750,width=1250,scrollbars=1,resizable=1,location=1");
-                setTimeout(() => opened.close(), 5000); // TODO: onHashChangeEvent
+
+                setTimeout(() => window.location.href = window.location.href = '/', 1300);
             },
             error: function() {
-                $('#message').html(generateAlert(null, 'Erreur lors de la connexion.', 'danger'))
+                $('#message').html(generateAlert('Erreur rencontrée !', 'Erreur lors de la connexion.', 'danger'))
                     .fadeIn('slow');
             }
         });

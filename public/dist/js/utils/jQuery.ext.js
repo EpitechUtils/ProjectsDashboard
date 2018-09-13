@@ -58,4 +58,41 @@
     };
 
 
+    /**
+     * Open oauth page for authentication
+     * @param options
+     */
+    $.oauthpopup = function(options) {
+        options.windowName = options.windowName || 'ConnectWithOAuth';
+        options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=400';
+        //options.callback = options.callback || (() => window.location.reload());
+        options.startCallbackBaseURL = options.startCallbackBaseURL || null;
+        console.log(options.path);
+
+        let that = this;
+        that._oauthWindow = window.open(options.path, options.windowName, options.windowOptions);
+        /*that._oauthInterval = window.setInterval(() => {
+            if (that._oauthWindow.closed !== false) {
+                window.clearInterval(that._oauthInterval);
+                options.callback();
+            }
+        }, 1000);*/
+
+        let checkLocationChange = function() {
+            setTimeout(() => {
+                let obj = Object.create(that._oauthWindow.location);
+
+                if (!options.startCallbackBaseURL
+                    || that._oauthWindow.location.host.startsWith(options.startCallbackBaseURL)) {
+                    console.log('yeasss');
+                } else {
+                    checkLocationChange();
+                }
+            }, 500);
+        };
+
+        checkLocationChange();
+    }
+
+
 })(jQuery);

@@ -16,3 +16,7 @@ function isValidEpitechEmail(email) {
     let split = String(email).split('@');
     return split[1] === 'epitech.eu';
 }
+
+function isValidAutologinLink(autologin) {
+    return autologin.startsWith('https://intra.epitech.eu/auth-');
+}

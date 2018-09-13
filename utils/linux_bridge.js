@@ -12,9 +12,15 @@ function checkBlihConnection(email, password) {
     command += ' -t ' + token + ' repository list';
 
     return new Promise((resolve, reject) => {
-        childProcess.exec(command, err => {
+        childProcess.exec(command, (err, out, outerr) => {
             if (err) {
-                return reject(new Error('Identifiants incorrects.'));
+                if (err.code === 127) {
+                    return reject(new Error('Commande "blih" inconnue.'));
+                } else if (String(outerr).toLowerCase().includes('bad token')) {
+                    return reject(new Error('Identifiants incorrects.'));
+                }
+
+                return reject(new Error('Serveurs blih injoignable. Réessayez plus tard.'));
             }
 
             resolve('success');

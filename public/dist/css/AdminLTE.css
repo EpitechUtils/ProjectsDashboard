@@ -3254,7 +3254,13 @@ table.text-center th {
 .login-box,
 .register-box {
   width: 360px;
-  margin: 7% auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin-left: 40.5%;
+  margin-top: -3%;
 }
 @media (max-width: 768px) {
   .login-box,

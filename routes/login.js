@@ -10,18 +10,18 @@ let api = require('../utils/api');
 
 router.get('/', (req, res) => res.render('login'));
 router.post('/', (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
+    let data = req.body;
 
-    linuxBridge.checkBlihConnection(email, password)
+    // Check if blih exists on system and if logins are valid
+    linuxBridge.checkBlihConnection(data.email, data.password)
         .then(() => {
-            api.getOffice365LoginURI().then(officeLogin => {
-                res.json({
-                    success: 'redirect',
-                    redirect: officeLogin
-                });
-            }).catch(err => res.json({error: err.toString()}));
-        }).catch(err => res.json({error: err.toString()}));
+            // Validate autologin sended in form and check if
+            // login is the same of email sended in form
+            api.validateAutologin(data.autologin, data.email)
+                .then(() => {
+                    res.json({success: 'redirect'});
+                }).catch(err => res.json({error: err.message}));
+        }).catch(err => res.json({error: err.message}));
 });
 
 module.exports = router;
