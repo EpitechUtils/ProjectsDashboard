@@ -6,16 +6,20 @@ let express = require('express');
 
 let file = require('../utils/file');
 let router = express.Router();
+let app = express();
 
 router.get('/', function(req, res) {
-    let userData = file.getUserConfig();
-    if (!file.userIsConnectecAndFileCreated() || !userData) {
+    // Temp
+    file.stockUserConfig(req.app);
+
+    console.log(app.locals.userData);
+
+    if (!file.userIsConnectecAndFileCreated() || !app.locals.userData) {
         return res.redirect('/login');
     }
 
-    console.log(file.getUserConfig());
     return res.render('index', {
-        title: 'Accueil',
+        title: 'Accueil'
     });
 });
 

@@ -5,6 +5,7 @@
 let express = require('express');
 let router = express.Router();
 
+let file = require('../utils/file');
 let linuxBridge = require('../utils/linux_bridge');
 let api = require('../utils/api');
 
@@ -19,6 +20,7 @@ router.post('/', (req, res) => {
             // login is the same of email sended in form
             api.validateAutologin(data.autologin, data.email)
                 .then(() => {
+                    file.stockUserConfig(req.app);
                     res.json({success: 'redirect'});
                 }).catch(err => res.json({error: err.message}));
         }).catch(err => res.json({error: err.message}));

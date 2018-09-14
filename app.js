@@ -37,7 +37,8 @@ app.locals = {
     site: {
         name: "DashboardTech",
         nameStylish: '<b>Dashboard</b>Tech'
-    }
+    },
+    userData: null
 };
 
 app.use(session(sess));

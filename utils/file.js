@@ -7,35 +7,43 @@ let fs = require('fs');
 let path = require('path');
 
 /**
- * Get user configuration object
- * @returns {String|null} Object
+ * Stock user configuration in app
+ * @param {Object} app Express app object
+ * @returns {void}
  */
-function getUserConfig() {
+function stockUserConfig(app) {
     let appPath = getBaseAppPath();
 
+    // Set global userData variable to user config object
     try {
+        if (app.locals.userData && app.locals.userData !== null) {
+            return;
+        }
+
+        // Check if global config exists
         if (fs.existsSync(appPath + 'config.json')) {
             let data = fs.readFileSync(appPath + 'config.json', 'utf-8');
             let dataObj = JSON.parse(data);
             if (!dataObj.connected) {
-                return null;
+                return;
             }
 
+            // Parse login and get firstname.name and replace
+            // dot by tiret (-) for configuration file name
             let login = String(dataObj.connected).split('@')[0].replace('.', '-');
             let userData = JSON.parse(fs.readFileSync(appPath + login + '.conf.json', 'utf-8'));
             if (!userData.email) {
-                return null;
+                return;
             }
 
-            return userData;
+            // Set global userData variable
+            app.locals.userData = userData;
         }
     } catch(err) {
         console.error(err);
-        return null;
     }
-
-    return null;
 }
+
 
 /**
  * Check if user is connected and have their own config file
@@ -71,6 +79,7 @@ function userIsConnectecAndFileCreated() {
 function getBaseAppPath() {
     let appPath = os.homedir() + path.sep + '.projects_dashboard' + path.sep;
 
+    // Check if file exists, and create it otherwise
     try {
         if (!fs.existsSync(appPath)) {
             fs.mkdirSync(appPath);
@@ -88,7 +97,7 @@ function getBaseAppPath() {
 
 
 module.exports = {
-    getUserConfig: getUserConfig,
+    stockUserConfig: stockUserConfig,
     userIsConnectecAndFileCreated: userIsConnectecAndFileCreated,
     getBaseAppPath: getBaseAppPath
 };
