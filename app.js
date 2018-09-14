@@ -8,11 +8,26 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let helmet = require('helmet');
+let session = require('express-session');
+let sha512 = require('js-sha512');
 
 let indexRouter = require('./routes/index');
 let loginRouter = require('./routes/login');
 
 let app = express();
+let sess = {
+    secret: sha512.create().update('DashboardTech').hex(),
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: 'auto'
+    }
+};
+
+if (app.get('env') === 'production') {
+    app.set('trust proxy', 1);
+    sess.cookie.secure = true;
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,11 +35,13 @@ app.set('view engine', 'twig');
 
 app.locals = {
     site: {
-        name: "DashBlih",
-        nameStylish: '<b>Dash</b>Blih'
-    }
+        name: "DashboardTech",
+        nameStylish: '<b>Dashboard</b>Tech'
+    },
+    userData: null
 };
 
+app.use(session(sess));
 app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json());

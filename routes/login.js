@@ -5,9 +5,9 @@
 let express = require('express');
 let router = express.Router();
 
+let file = require('../utils/file');
 let linuxBridge = require('../utils/linux_bridge');
 let api = require('../utils/api');
-let file = require('../utils/file');
 
 router.get('/', (req, res) => res.render('login'));
 router.post('/', (req, res) => {
@@ -23,6 +23,7 @@ router.post('/', (req, res) => {
                     // Create file and check if create success
                     file.createAuthFile(data)
                         .then(() => {
+                            file.stockUserConfig(req.app);
                             return res.json({success: 'redirect'});
                         }).catch(err => res.json({error: err.message}));
                 }).catch(err => res.json({error: err.message}));
