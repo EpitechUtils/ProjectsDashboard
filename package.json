@@ -33,6 +33,8 @@
     "helmet": "^3.13.0",
     "http-errors": "~1.6.2",
     "js-sha512": "^0.8.0",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.21",
     "morgan": "^1.9.1",
     "twig": "~0.10.3"
   }

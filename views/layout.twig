@@ -141,20 +141,20 @@
 
                                 <p>
                                     {{ userData.firstname ~ ' ' ~ userData.lastname }} - Promo {{ userData.promo }}
-                                    <small>Member since Nov. 2012</small>
+                                    <small>Connecté depuis le {{ userData.connectedSince }}</small>
                                 </p>
                             </li>
-                            <!-- Menu Body -->
+
                             <li class="user-body">
                                 <div class="row">
                                     <div class="col-xs-4 text-center">
-                                        <a href="#">Followers</a>
+                                        {{ userData.credits }} <br /><b>Crédits</b>
                                     </div>
                                     <div class="col-xs-4 text-center">
-                                        <a href="#">Sales</a>
+                                        {{ userData.gpa.0.gpa }} <br /><b>G.P.A</b>
                                     </div>
                                     <div class="col-xs-4 text-center">
-                                        <a href="#">Friends</a>
+                                        {{ userData.spice.available_spice }} <br /><b>Épices</b>
                                     </div>
                                 </div>
                                 <!-- /.row -->

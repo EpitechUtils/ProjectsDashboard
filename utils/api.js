@@ -31,6 +31,37 @@ function getOffice365LoginURI() {
     });
 }
 
+/**
+ *
+ * @param data
+ * @param values
+ * @returns {Promise<any>}
+ */
+function getUserValues(data, values = null) {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: data.autologin + '/user/' + data.email + '/print'
+        }).then(res => {
+            let data = Object(res.data);
+
+            if (values) {
+                let finalObject = {};
+
+                values.map(property => {
+                    if (data.hasOwnProperty(property)) {
+                        finalObject[property] = res.data[property];
+                    }
+                });
+
+                return resolve(finalObject);
+            }
+
+            resolve(data);
+        }).catch(err => reject(err));
+    });
+}
+
 
 /**
  * Validate autologin link for user
@@ -87,6 +118,7 @@ function getBaseAuthInformations(autologin) {
 
 module.exports = {
     getOffice365LoginURI: getOffice365LoginURI,
+    getUserValues: getUserValues,
     validateAutologin: validateAutologin,
     getBaseAuthInformations: getBaseAuthInformations
 };

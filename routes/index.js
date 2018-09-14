@@ -13,12 +13,11 @@ router.get('/', function(req, res) {
         return res.redirect('/login');
     }
 
-    console.log(req.session);
     return view.renderWithRequiredParams({
         view: 'index',
         res: res,
         req: req,
-        variables: {
+        custom: {
             title: 'Accueil'
         }
     });

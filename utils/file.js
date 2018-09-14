@@ -5,6 +5,7 @@
 let os = require('os');
 let fs = require('fs');
 let path = require('path');
+let moment = require('moment');
 
 let api = require('./api');
 
@@ -22,25 +23,15 @@ function stockUserConfig(session) {
             return;
         }
 
-        // Check if global config exists
-        if (fs.existsSync(appPath + 'config.json')) {
-            let data = fs.readFileSync(appPath + 'config.json', 'utf-8');
-            let dataObj = JSON.parse(data);
-            if (!dataObj.connected) {
-                return;
-            }
-
-            // Parse login and get firstname.name and replace
-            // dot by tiret (-) for configuration file name
-            let login = String(dataObj.connected).split('@')[0].replace('.', '-');
-            let userData = JSON.parse(fs.readFileSync(appPath + login + '.conf.json', 'utf-8'));
-            if (!userData.email) {
-                return;
-            }
-
-            // Set global userData variable
-            session.userData = userData;
+        // Parse login and get firstname.name and replace
+        // dot by line (-) for configuration file name
+        let userData = JSON.parse(fs.readFileSync(appPath + 'config.json', 'utf-8'));
+        if (!userData.email) {
+            return;
         }
+
+        // Set global userData variable
+        session.userData = userData;
     } catch(err) {
         console.error(err);
     }
@@ -56,27 +47,39 @@ function userIsConnectecAndFileCreated(session) {
     let appPath = getBaseAppPath();
 
     try {
-        if (fs.existsSync(appPath + 'config.json')) {
-            let data = fs.readFileSync(appPath + 'config.json', 'utf-8');
-            let dataObj = JSON.parse(data);
-            if (!dataObj.connected) {
-                return false;
-            }
-
-            let login = String(dataObj.connected).split('@')[0].replace('.', '-');
-            let userConfExists = fs.existsSync(appPath + login + '.conf.json');
-            if (userConfExists) {
-                stockUserConfig(session);
-            }
-
-            return userConfExists && session.userData;
+        let userConfExists = fs.existsSync(appPath + 'config.json');
+        if (userConfExists) {
+            stockUserConfig(session);
         }
+
+        return userConfExists && session.userData;
+    } catch(err) {
+        console.error(err);
+        return false;
+    }
+}
+
+
+/**
+ * Logout user
+ * Delete config files
+ * Clear session
+ * @param {Object} session Session object
+ * @returns {boolean} True if user have been logged out, and false otherwise
+ */
+function logoutUser(session) {
+    if (!session || !session.userData) {
+        return false;
+    }
+
+    try {
+        fs.unlinkSync(getBaseAppPath() + 'config.json');
     } catch(err) {
         console.error(err);
         return false;
     }
 
-    return false;
+    return true;
 }
 
 
@@ -108,11 +111,12 @@ function getBaseAppPath() {
  */
 function createAuthFile(data) {
     let basePath = getBaseAppPath();
-    let filename = basePath + data.email.split('@')[0].replace('.', '-') + '.conf.json';
+    let filename = basePath + 'config.json';
     let basicObject = {
         email: data.email,
         token: data.password,
-        autologin: data.autologin
+        autologin: data.autologin,
+        connectedSince: moment().utc().format('YYYY-MM-DD HH:mm:ss')
     };
 
     // Get other user inforlations from intranet
@@ -129,17 +133,7 @@ function createAuthFile(data) {
                             return reject(new Error('Error lors de la création de la configuration.'));
                         }
 
-                        let configObject = {connected: data.email};
-
-                        // Create or edit global configuration file
-                        fs.writeFile(basePath + 'config.json', JSON.stringify(configObject), 'utf-8', err => {
-                            if (err) {
-                                console.error(err);
-                                return reject(new Error('Error lors de la création de la configuration globale.'));
-                            }
-
-                            return resolve();
-                        });
+                        resolve();
                     });
                 }).catch(err => reject(err));
         } catch (err) {
@@ -153,6 +147,7 @@ function createAuthFile(data) {
 module.exports = {
     stockUserConfig: stockUserConfig,
     userIsConnectecAndFileCreated: userIsConnectecAndFileCreated,
+    logoutUser: logoutUser,
     getBaseAppPath: getBaseAppPath,
     createAuthFile: createAuthFile
 };
