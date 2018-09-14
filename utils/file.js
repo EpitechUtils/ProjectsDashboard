@@ -12,14 +12,18 @@ let api = require('./api');
 /**
  * Stock user configuration in app
  * @param {Object} session Express session Object
- * @returns {void}
+ * @param {String} type Only 'stock' for stock object in session, or 'get' to return it
+ * @returns {void|Object} Void in type is 'stock' and object otherwise
  */
-function stockUserConfig(session) {
+function stockOrGetUserConfiguration(session, type) {
     let appPath = getBaseAppPath();
 
     // Set global userData variable to user config object
     try {
         if (session.userData && session.userData !== null) {
+            if (type === 'get') {
+                return null;
+            }
             return;
         }
 
@@ -27,13 +31,23 @@ function stockUserConfig(session) {
         // dot by line (-) for configuration file name
         let userData = JSON.parse(fs.readFileSync(appPath + 'config.json', 'utf-8'));
         if (!userData.email) {
+            if (type === 'get') {
+                return null;
+            }
             return;
+        }
+
+        if (type === 'get') {
+            return userData;
         }
 
         // Set global userData variable
         session.userData = userData;
     } catch(err) {
         console.error(err);
+        if (type === 'get') {
+            return null;
+        }
     }
 }
 
@@ -49,7 +63,7 @@ function userIsConnectecAndFileCreated(session) {
     try {
         let userConfExists = fs.existsSync(appPath + 'config.json');
         if (userConfExists) {
-            stockUserConfig(session);
+            stockOrGetUserConfiguration(session, 'stock');
         }
 
         return userConfExists && session.userData;
@@ -145,7 +159,7 @@ function createAuthFile(data) {
 
 
 module.exports = {
-    stockUserConfig: stockUserConfig,
+    stockOrGetUserConfiguration: stockOrGetUserConfiguration,
     userIsConnectecAndFileCreated: userIsConnectecAndFileCreated,
     logoutUser: logoutUser,
     getBaseAppPath: getBaseAppPath,

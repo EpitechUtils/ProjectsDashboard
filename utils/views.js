@@ -15,7 +15,8 @@ function renderWithRequiredParams(options) {
     api.getUserValues(userData, ['gpa', 'spice', 'credits'])
         .then(object => {
             options.res.render(options.view, Object.assign(options.custom, {
-                userData: Object.assign(userData, object)
+                userData: Object.assign(userData, object),
+                templateSkin: process.env.NODE_ENV === 'development' ? 'skin-red' : 'skin-green'
             }));
         }).catch(err => {
             console.error(err);

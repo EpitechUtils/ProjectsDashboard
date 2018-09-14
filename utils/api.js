@@ -31,11 +31,12 @@ function getOffice365LoginURI() {
     });
 }
 
+
 /**
- *
- * @param data
- * @param values
- * @returns {Promise<any>}
+ * Get users values from intranet API
+ * @param {Object} data Data with autologin and email field
+ * @param {Array} values Get only values inside this array, all values are taken otherwise
+ * @returns {Promise<Object>} Return the final object (sorted or not, depend to valuse parameter)
  */
 function getUserValues(data, values = null) {
     return new Promise((resolve, reject) => {
@@ -45,6 +46,7 @@ function getUserValues(data, values = null) {
         }).then(res => {
             let data = Object(res.data);
 
+            // If you would like to take only values in this array
             if (values) {
                 let finalObject = {};
 
@@ -57,6 +59,7 @@ function getUserValues(data, values = null) {
                 return resolve(finalObject);
             }
 
+            // Resolve promise with all value
             resolve(data);
         }).catch(err => reject(err));
     });
@@ -98,6 +101,11 @@ function validateAutologin(autologin, email) {
 }
 
 
+/**
+ * Get base authentication fields
+ * @param {String} autologin Autologin link
+ * @returns {Promise<Object>} Values
+ */
 function getBaseAuthInformations(autologin) {
     return new Promise((resolve, reject) => {
         axios({
@@ -116,6 +124,8 @@ function getBaseAuthInformations(autologin) {
     });
 }
 
+
+// Export node module
 module.exports = {
     getOffice365LoginURI: getOffice365LoginURI,
     getUserValues: getUserValues,
