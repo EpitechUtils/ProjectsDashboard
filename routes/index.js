@@ -4,22 +4,23 @@
  */
 let express = require('express');
 
+let view = require('../utils/views');
 let file = require('../utils/file');
 let router = express.Router();
-let app = express();
 
 router.get('/', function(req, res) {
-    // Temp
-    file.stockUserConfig(req.app);
-
-    console.log(app.locals.userData);
-
-    if (!file.userIsConnectecAndFileCreated() || !app.locals.userData) {
+    if (!file.userIsConnectecAndFileCreated(req.session)) {
         return res.redirect('/login');
     }
 
-    return res.render('index', {
-        title: 'Accueil'
+    console.log(req.session);
+    return view.renderWithRequiredParams({
+        view: 'index',
+        res: res,
+        req: req,
+        variables: {
+            title: 'Accueil'
+        }
     });
 });
 

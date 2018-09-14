@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
                     // Create file and check if create success
                     file.createAuthFile(data)
                         .then(() => {
-                            file.stockUserConfig(req.app);
+                            file.stockUserConfig(req.session);
                             return res.json({success: 'redirect'});
                         }).catch(err => res.json({error: err.message}));
                 }).catch(err => res.json({error: err.message}));

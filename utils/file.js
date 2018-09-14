@@ -10,15 +10,15 @@ let api = require('./api');
 
 /**
  * Stock user configuration in app
- * @param {Object} app Express app object
+ * @param {Object} session Express session Object
  * @returns {void}
  */
-function stockUserConfig(app) {
+function stockUserConfig(session) {
     let appPath = getBaseAppPath();
 
     // Set global userData variable to user config object
     try {
-        if (app.locals.userData && app.locals.userData !== null) {
+        if (session.userData && session.userData !== null) {
             return;
         }
 
@@ -39,7 +39,7 @@ function stockUserConfig(app) {
             }
 
             // Set global userData variable
-            app.locals.userData = userData;
+            session.userData = userData;
         }
     } catch(err) {
         console.error(err);
@@ -49,9 +49,10 @@ function stockUserConfig(app) {
 
 /**
  * Check if user is connected and have their own config file
+ * @param {Object} session Session object
  * @returns {Boolean} If user config file exists
  */
-function userIsConnectecAndFileCreated() {
+function userIsConnectecAndFileCreated(session) {
     let appPath = getBaseAppPath();
 
     try {
@@ -63,7 +64,12 @@ function userIsConnectecAndFileCreated() {
             }
 
             let login = String(dataObj.connected).split('@')[0].replace('.', '-');
-            return fs.existsSync(appPath + login + '.conf.json');
+            let userConfExists = fs.existsSync(appPath + login + '.conf.json');
+            if (userConfExists) {
+                stockUserConfig(session);
+            }
+
+            return userConfExists && session.userData;
         }
     } catch(err) {
         console.error(err);
@@ -79,7 +85,7 @@ function userIsConnectecAndFileCreated() {
  * @returns {string|null} Base path
  */
 function getBaseAppPath() {
-    let appPath = os.homedir() + path.sep + '.projects_dashboard' + path.sep;
+    let appPath = os.homedir() + path.sep + '.dashboardTech' + path.sep;
 
     // Check if file exists, and create it otherwise
     try {
@@ -101,29 +107,41 @@ function getBaseAppPath() {
  * @returns {Promise} If file has been created
  */
 function createAuthFile(data) {
-    let filename = getBaseAppPath() + data.email + '-config.json';
-    let userInfos = {};
+    let basePath = getBaseAppPath();
+    let filename = basePath + data.email.split('@')[0].replace('.', '-') + '.conf.json';
     let basicObject = {
         email: data.email,
-        token: data.token,
+        token: data.password,
         autologin: data.autologin
     };
 
-    api.getBaseAuthInformations(data.autologin)
-        .then(obj => {
-            userInfos = obj;
-        }).catch(err => console.log(err));
-
+    // Get other user inforlations from intranet
     return new Promise((resolve, reject) => {
         try {
-            fs.writeFile(filename, JSON.stringify(Object.assign({}, basicObject, userInfos)), 'utf-8', err => {
-                if (err) {
-                    console.error(err);
-                    return reject(new Error('Error lors de la création de la configuration.'));
-                }
+            api.getBaseAuthInformations(data.autologin)
+                .then(obj => {
+                    let authObject = Object.assign(basicObject, obj);
 
-                return resolve();
-            });
+                    // Create auth file with user informations and auth combined
+                    fs.writeFile(filename, JSON.stringify(authObject), 'utf-8', err => {
+                        if (err) {
+                            console.error(err);
+                            return reject(new Error('Error lors de la création de la configuration.'));
+                        }
+
+                        let configObject = {connected: data.email};
+
+                        // Create or edit global configuration file
+                        fs.writeFile(basePath + 'config.json', JSON.stringify(configObject), 'utf-8', err => {
+                            if (err) {
+                                console.error(err);
+                                return reject(new Error('Error lors de la création de la configuration globale.'));
+                            }
+
+                            return resolve();
+                        });
+                    });
+                }).catch(err => reject(err));
         } catch (err) {
             console.error(err);
             return reject(new Error('Error lors de la création de la configuration.'));

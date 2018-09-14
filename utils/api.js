@@ -76,7 +76,6 @@ function getBaseAuthInformations(autologin) {
             let data = res.data;
 
             resolve({
-                login: data.login,
                 firstname: data.firstname,
                 lastname: data.lastname,
                 picture: data.picture,

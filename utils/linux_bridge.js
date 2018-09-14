@@ -3,13 +3,9 @@
  * ProjectsDashboard
  */
 let childProcess = require('child_process');
-let sha512 = require('js-sha512').sha512;
 
 function checkBlihConnection(email, token) {
-    let command = 'blih -u ' + String(email).toLowerCase();
-    // let hash = sha512.create().update(password);
-    // let token = hash.hex();
-    command += ' -t ' + token + ' repository list';
+    let command = 'blih -u ' + String(email).toLowerCase() + ' -t ' + token + ' repository list';
 
     return new Promise((resolve, reject) => {
         childProcess.exec(command, (err, out) => {
